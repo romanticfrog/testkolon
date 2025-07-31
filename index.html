@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>간단한 Q&A 사이트</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f7f7f7;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 { text-align: center; }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .output {
+      margin-top: 30px;
+      padding: 15px;
+      background-color: #e0f7fa;
+      border-left: 5px solid #00bcd4;
+    }
+  </style>
+</head>
+<body>
+  <h1>Q&A 입력 폼</h1>
+  <form id="qa-form">
+    <label>1번의 값:
+      <input type="text" id="input1" required>
+    </label>
+    <label>2번의 값:
+      <input type="text" id="input2" required>
+    </label>
+    <label>3번의 값:
+      <input type="text" id="input3" required>
+    </label>
+    <button type="submit">답변 받기</button>
+  </form>
+
+  <div class="output" id="result" style="display:none;">
+    <h3>결과:</h3>
+    <p id="result-text"></p>
+  </div>
+
+  <script>
+    document.getElementById('qa-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const input1 = document.getElementById('input1').value;
+      const input2 = document.getElementById('input2').value;
+      const input3 = document.getElementById('input3').value;
+
+      // 여기서 질문 데이터를 바탕으로 응답을 생성하거나 서버에 보낼 수 있음
+      const response = `1번: ${input1} / 2번: ${input2} / 3번: ${input3} → 당신의 질문에 대한 응답입니다!`;
+
+      document.getElementById('result-text').textContent = response;
+      document.getElementById('result').style.display = 'block';
+    });
+  </script>
+</body>
+</html>
+
