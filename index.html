@@ -31,7 +31,6 @@
     #result {
       margin-top: 20px;
       font-weight: bold;
-      color: green;
     }
   </style>
 </head>
@@ -63,8 +62,9 @@
       };
 
       document.getElementById('result').textContent = "⏳ 전송 중입니다...";
+      document.getElementById('result').style.color = "black";
 
-      fetch('https://script.google.com/macros/s/AKfycby1DJIFqpHx1fxnqgZ1wE2iwUQgbqupSOqt-K46ETtqd61wpmq34NUDbRVovaFBBhn/exec', {
+      fetch('https://script.google.com/macros/s/AKfycbyCNycnxmPP6rtgnL7GWKplFMnUfvqbOkc3LI3ARZ9r0Ooc3rgRXlBBNrgoNGFtpyoO/exec', {
         method: 'POST',
         headers: {
           "Content-Type": "application/json"
@@ -74,9 +74,17 @@
       .then(response => response.text())
       .then(result => {
         document.getElementById('result').textContent = "✅ " + result;
-
-        // 입력값 초기화
+        document.getElementById('result').style.color = "green";
+        // 입력 초기화
         document.getElementById('input1').value = "";
         document.getElementById('input2').value = "";
         document.getElementById('input3').value = "";
-        document.getElementById('result').style.color = "
+      })
+      .catch(error => {
+        document.getElementById('result').textContent = "❌ 오류 발생: " + error;
+        document.getElementById('result').style.color = "red";
+      });
+    });
+  </script>
+</body>
+</html>
