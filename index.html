@@ -66,6 +66,9 @@
 
       fetch('https://script.google.com/macros/s/AKfycby1DJIFqpHx1fxnqgZ1wE2iwUQgbqupSOqt-K46ETtqd61wpmq34NUDbRVovaFBBhn/exec', {
         method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify(data)
       })
       .then(response => response.text())
@@ -76,12 +79,4 @@
         document.getElementById('input1').value = "";
         document.getElementById('input2').value = "";
         document.getElementById('input3').value = "";
-      })
-      .catch(error => {
-        document.getElementById('result').textContent = "❌ 오류 발생: " + error;
-        document.getElementById('result').style.color = "red";
-      });
-    });
-  </script>
-</body>
-</html>
+        document.getElementById('result').style.color = "
