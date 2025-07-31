@@ -1,1 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Google 시트 연동 예제</title>
+</head>
+<body>
+  <h2>Q&A 입력</h2>
+  <form id="qa-form">
+    <input type="text" id="input1" placeholder="1번"><br>
+    <input type="text" id="input2" placeholder="2번"><br>
+    <input type="text" id="input3" placeholder="3번"><br>
+    <button type="submit">답변받기</button>
+  </form>
+
+  <p id="result"></p>
+
+  <script>
+    document.getElementById('qa-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const data = {
+        input1: document.getElementById('input1').value,
+        input2: document.getElementById('input2').value,
+        input3: document.getElementById('input3').value
+      };
+
+      fetch('https://script.google.com/macros/s/AKfycbwijIiba09Q-POnXH3XTlS-8IcgOmqS7hiJVIA7oHXwk9G6-SHfYQ5JKdPRR3Bt62mCQQ/exec', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.text())
+      .then(result => document.getElementById('result').textContent = "✅ " + result)
+      .catch(error => document.getElementById('result').textContent = "❌ 오류 발생: " + error);
+    });
+  </script>
+</body>
+</html>
 
