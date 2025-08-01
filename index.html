@@ -1,39 +1,60 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <title>Google 시트 연동 예제</title>
-</head>
-<body>
-  <h2>Q&A 입력</h2>
-  <form id="qa-form">
-    <input type="text" id="input1" placeholder="1번"><br>
-    <input type="text" id="input2" placeholder="2번"><br>
-    <input type="text" id="input3" placeholder="3번"><br>
-    <button type="submit">답변받기</button>
-  </form>
+<script>
+    // YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL 대신 실제 배포한 URL을 붙여넣으세요.
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxxxxxxxxx/exec'; // 여기에 실제 URL 입력
 
-  <p id="result"></p>
+    document.getElementById('submitBtn').addEventListener('click', e => {
+        e.preventDefault(); // 기본 폼 제출 동작 방지
 
-  <script>
-    document.getElementById('qa-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const data = {
-        input1: document.getElementById('input1').value,
-        input2: document.getElementById('input2').value,
-        input3: document.getElementById('input3').value
-      };
+        const resultDiv = document.getElementById('result');
+        resultDiv.textContent = '데이터 전송 중...'; // 사용자에게 전송 중임을 알림
+        resultDiv.style.color = 'blue';
 
-      fetch('https://script.google.com/macros/s/AKfycbwijIiba09Q-POnXH3XTlS-8IcgOmqS7hiJVIA7oHXwk9G6-SHfYQ5JKdPRR3Bt62mCQQ/exec', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      })
-      .then(response => response.text())
-      .then(result => document.getElementById('result').textContent = "✅ " + result)
-      .catch(error => document.getElementById('result').textContent = "❌ 오류 발생: " + error);
+        const data = {
+            input1: document.getElementById('input1').value,
+            input2: document.getElementById('input2').value,
+            input3: document.getElementById('input3').value
+        };
+
+        // 데이터가 비어있는지 간단하게 검사 (클라이언트 측 유효성 검사)
+        if (!data.input1 || !data.input2 || !data.input3) {
+            resultDiv.textContent = '모든 입력 필드를 채워주세요!';
+            resultDiv.style.color = 'orange';
+            return;
+        }
+
+        fetch(scriptURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json' // JSON 형식으로 데이터 전송 명시
+            },
+            body: JSON.stringify(data) // JavaScript 객체를 JSON 문자열로 변환하여 전송
+        })
+        .then(response => {
+            // HTTP 응답 상태 코드 확인 (예: 200 OK, 404 Not Found, 500 Internal Server Error)
+            if (!response.ok) {
+                // HTTP 오류 발생 시 (네트워크 문제, URL 잘못됨 등)
+                throw new Error(`HTTP 오류! 상태 코드: ${response.status} (${response.statusText})`);
+            }
+            return response.json(); // 서버 응답을 JSON으로 파싱
+        })
+        .then(data => {
+            // 서버로부터 받은 JSON 응답 처리
+            console.log('서버 응답:', data); // 개발자 도구 콘솔에서 응답 확인
+            if (data.status === 'success') {
+                resultDiv.textContent = '성공: ' + data.message;
+                resultDiv.style.color = 'green';
+                // 폼 초기화 (선택 사항)
+                document.getElementById('Q&A_form').reset();
+            } else {
+                resultDiv.textContent = '오류: ' + data.message;
+                resultDiv.style.color = 'red';
+            }
+        })
+        .catch(error => {
+            // fetch 과정에서 발생한 네트워크 오류나 파싱 오류 처리
+            console.error('Fetch 오류 발생:', error);
+            resultDiv.textContent = 'Fetch 오류: ' + error.message + '. Google Apps Script URL을 확인하고, Apps Script 로그를 확인해보세요.';
+            resultDiv.style.color = 'darkred';
+        });
     });
-  </script>
-</body>
-</html>
-
+</script>
